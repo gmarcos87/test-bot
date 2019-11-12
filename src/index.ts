@@ -1,13 +1,15 @@
 import { Application } from 'probot' // eslint-disable-line no-unused-vars
+import express from 'express'
 
 export = (app: Application) => {
-  app.on('issues.opened', async (context) => {
-    const issueComment = context.issue({ body: 'Thanks for opening this issue!' })
-    await context.github.issues.createComment(issueComment)
-  })
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+  // Get an express router to expose new HTTP endpoints
+  const router:express.Router = app.route('/my-app')
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+  // Use any middleware
+  router.use(express.static('public'))
+
+  // Add a new route
+  router.get('/hello-world', (_req, res) => {
+    res.send('Hello world!')
+  })
 }
